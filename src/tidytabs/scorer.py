@@ -2,6 +2,8 @@
 
 import math
 
+WORD_CAP = math.log(2)  # title words can at most double or halve the odds
+
 
 class CloseScorer:
     def __init__(self, counts: dict[str, tuple[int, int]], total_close: int, total_keep: int):
@@ -22,7 +24,12 @@ class CloseScorer:
     def probability(self, features: set[str]) -> float:
         # No class prior: a tab with no known features stays at 0.5, even when the
         # history holds mostly closes.
-        log_odds = sum(self._weight(f) for f in self._known(features))
+        known = self._known(features)
+        words = sum(self._weight(f) for f in known if f.startswith("tok:"))
+        other = sum(self._weight(f) for f in known if not f.startswith("tok:"))
+        # Title words are many, weak, and shared across unrelated sites. Cap their combined
+        # weight, so that title words alone can move a tab to 67% at most, below the close limit.
+        log_odds = other + max(-WORD_CAP, min(WORD_CAP, words))
         return 1 / (1 + math.exp(-log_odds))
 
     def reasons(self, features: set[str], limit: int = 2) -> list[str]:
