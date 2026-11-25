@@ -212,3 +212,17 @@ def test_match_asks_jev_about_the_query_for_each_tab():
     q = post.requests[0][2]["questions"]["tab_0"]
     assert q["type"] == "noul"
     assert '"crab meat recipe"' in q["instructions"]
+
+
+def test_redact_url_drops_user_and_password():
+    assert redact_url("https://user:pw@x.com/a?b=1") == "x.com/a"
+
+
+def test_redact_url_keeps_the_port():
+    assert redact_url("https://user:pw@x.com:8443/a") == "x.com:8443/a"
+
+
+def test_redact_url_sends_only_the_scheme_and_host_for_other_schemes():
+    assert redact_url("file:///Users/me/taxes.pdf") == "file:"
+    assert redact_url("chrome://extensions/?id=abc") == "chrome://extensions"
+    assert redact_url("data:text/html,secret") == "data:"
