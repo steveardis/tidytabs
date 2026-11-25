@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "tidytabs helper",
+  "version": "0.3.1",
+  "description": "Lets the tidytabs command line tool list and move tabs without a reload.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "tidytabs helper: run tidytabs in a terminal"
+  },
+  "permissions": [
+    "tabs",
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApMxcN9TQMdAEH/xmx4WeFzfsQUHw4LYMYigd3avqS7lMMIYZ/Dr/AeCpaJcnsEkf5F6rjuuOHyjz+OzF43BmtjbmM4AF8nCtthefx5qB0TmGZ/HN5e6L9cYLmK9lRBTIL0hhboxcA+CR3AidvkY6EX+/GwT9iQJ4YrlOO5Ed2FONf9UlebTjIaIO1/MGpmeMf5fEUZAlOWjqu3TDdp+EnX7ApAQnqyFwuwKBgFeN4/XQANRgqZZDUVmBTEHR8RSE1d4eahI3OH0zOxQkt6PC9oIiWPx2SYcDwLqDjxsaMeWbavj0NzKe5CskltxkMzL01i5KPTy7ffOPYUxAmqufiQIDAQAB"
+}
