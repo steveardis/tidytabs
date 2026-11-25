@@ -121,3 +121,16 @@ def test_running_version_comes_from_ping(sock_dir):
 def test_old_extension_without_version_reports_none(sock_dir):
     serve_once(sock_dir / "brave.sock", lambda req: {"id": req["id"], "result": {"ok": True}})
     assert ExtensionClient("brave", socket_dir=sock_dir).running_version() is None
+
+
+def test_install_quotes_a_python_path_with_spaces(tmp_path):
+    brave_dir = tmp_path / "Brave-Browser"
+    brave_dir.mkdir()
+    install_native_host(
+        data_dir=tmp_path / "data",
+        browser_dirs={"brave": brave_dir},
+        extension_id="abcdefghijklmnopabcdefghijklmnop",
+        python="/Applications/My Python/bin/python3",
+    )
+    script = (tmp_path / "data" / "native-host").read_text()
+    assert "exec '/Applications/My Python/bin/python3' -m tidytabs.native_host" in script

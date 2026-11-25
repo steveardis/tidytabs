@@ -57,9 +57,23 @@ def httpx_post(url: str, headers: dict, payload: dict) -> dict:
 
 
 def redact_url(url: str) -> str:
-    """Drop the scheme, query string, and fragment. Those can hold tokens or personal data."""
+    """The part of a URL that is safe to send to the AI.
+
+    For http and https: the host, the port, and the path. The user name, password, query
+    string, and fragment are removed, because they can hold credentials or tokens.
+    For other schemes (file, data, chrome, and so on): only the scheme and the host,
+    because the rest can hold local file paths or page content."""
     parts = urlsplit(url)
-    return (parts.netloc + parts.path) if parts.netloc else url.split("?")[0]
+    host = parts.hostname or ""
+    if parts.scheme in {"http", "https"}:
+        try:
+            port = parts.port
+        except ValueError:  # a port that is not a number
+            port = None
+        return (f"{host}:{port}" if port else host) + parts.path
+    if not parts.scheme:
+        return ""
+    return f"{parts.scheme}://{host}" if host else f"{parts.scheme}:"
 
 
 def _tab_line(key: str, tab: Tab) -> str:
