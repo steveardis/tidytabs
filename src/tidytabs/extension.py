@@ -3,6 +3,7 @@
 import base64
 import hashlib
 import json
+import shlex
 import socket
 import sys
 import uuid
@@ -123,7 +124,8 @@ def install_native_host(
     """Write the host start script, and a host manifest for each browser that is installed."""
     data_dir.mkdir(parents=True, exist_ok=True)
     host = data_dir / "native-host"
-    host.write_text(f"#!/bin/sh\nexec {python} -m tidytabs.native_host \"$@\"\n")
+    # Quote the path: a space in it would otherwise split the command.
+    host.write_text(f"#!/bin/sh\nexec {shlex.quote(python)} -m tidytabs.native_host \"$@\"\n")
     host.chmod(0o755)
     manifest = {
         "name": HOST_NAME,
